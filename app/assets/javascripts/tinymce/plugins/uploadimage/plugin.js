@@ -11,13 +11,14 @@
 
       function showDialog() {
         win = editor.windowManager.open({
-          title: ed.translate('Insert an image from your computer'),
+          title: ed.translate('Insert a file from your computer'),
           width:  520 + parseInt(editor.getLang('uploadimage.delta_width', 0), 10),
           height: 180 + parseInt(editor.getLang('uploadimage.delta_height', 0), 10),
           body: [
             {type: 'iframe',  url: 'javascript:void(0)'},
-            {type: 'textbox', name: 'file', label: ed.translate('Choose an image'), subtype: 'file'},
-            {type: 'textbox', name: 'alt',  label: ed.translate('Image description')},
+            {type: 'textbox', name: 'file', label: ed.translate('Choose a file'), subtype: 'file'},
+            {type: 'textbox', name: 'title',  label: ed.translate('File title')},
+            {type: 'textbox', name: 'alt',  label: ed.translate('File description')},
             {type: 'container', classes: 'error', html: "<p style='color: #b94a48;'>&nbsp;</p>"},
 
             // Trick TinyMCE to add a empty div that "preloads" the throbber image
@@ -179,17 +180,39 @@
         var figure = ed.getParam("uploadimage_figure", false);
         var alt_text = getInputValue("alt");
 
-        var imgstr = "<img src='" + json["image"]["url"] + "'";
+        var assetStr = "";
+        switch (json["content_type"]) {
+          case "image/jpeg":
+            assetStr = "<img src='" + json["file"]["url"] + "'";
+            
+            if(default_class != "")
+              assetStr += " class='" + default_class + "'";
 
-        if(default_class != "")
-          imgstr += " class='" + default_class + "'";
+            if(json["file"]["height"])
+              assetStr += " height='" + json["file"]["height"] + "'";
+            if(json["file"]["width"])
+              assetStr += " width='"  + json["file"]["width"]  + "'";
 
-        if(json["image"]["height"])
-          imgstr += " height='" + json["image"]["height"] + "'";
-        if(json["image"]["width"])
-          imgstr += " width='"  + json["image"]["width"]  + "'";
+            assetStr += " alt='" + alt_text + "'/>";
+            break;
 
-        imgstr += " alt='" + alt_text + "'/>";
+          case "video/mp4":
+            assetStr = 
+              "<video controls='controls' width='490' height='245'>" +
+              "  <source src='" + json["file"]["url"] + "'>" +
+              "  Your browser does not support HTML5 video."
+              "</video>";
+            break;
+
+          case "application/pdf":
+            assetStr = "<object data='" + json["file"]["url"] + "' " +
+                       "width='490' height='245' />"
+            break;
+          default:
+            assetStr = "<a href='" + json["file"]["url"] + "' >" +
+                       json["file"]["title"] + "</a>"
+
+        }
 
         if(figure) {
           var figureClass = ed.getParam("uploadimage_figure_class", "figure");
@@ -199,7 +222,7 @@
 
           if (figureClass !== "")
             figstr += " class='" + figureClass + "'";
-          figstr += ">" + imgstr;
+          figstr += ">" + assetStr;
           figstr += "<figcaption";
           if (figcaptionClass != "")
             figstr += " class='" + figcaptionClass + "'";
@@ -208,7 +231,7 @@
 
           return figstr;
         } else {
-          return imgstr;
+          return assetStr;
         }
       }
 
@@ -234,15 +257,15 @@
 
       // Add a button that opens a window
       editor.addButton('uploadimage', {
-        tooltip: ed.translate('Insert an image from your computer'),
-        icon : 'image',
+        tooltip: ed.translate('Insert a file from your computer'),
+        icon : 'upload',
         onclick: showDialog
       });
 
       // Adds a menu item to the tools menu
       editor.addMenuItem('uploadimage', {
-        text: ed.translate('Insert an image from your computer'),
-        icon : 'image',
+        text: ed.translate('Insert a file from your computer'),
+        icon : 'upload',
         context: 'insert',
         onclick: showDialog
       });
