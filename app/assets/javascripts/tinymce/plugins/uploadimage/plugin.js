@@ -258,14 +258,14 @@
       // Add a button that opens a window
       editor.addButton('uploadimage', {
         tooltip: ed.translate('Insert a file from your computer'),
-        icon : 'upload',
+        icon : 'browse',
         onclick: showDialog
       });
 
       // Adds a menu item to the tools menu
       editor.addMenuItem('uploadimage', {
         text: ed.translate('Insert a file from your computer'),
-        icon : 'upload',
+        icon : 'browse',
         context: 'insert',
         onclick: showDialog
       });
