@@ -183,6 +183,9 @@
         var assetStr = "";
         switch (json["content_type"]) {
           case "image/jpeg":
+          case "image/png":
+          case "image/gif":
+          case "image/tiff":
             assetStr = "<img src='" + json["file"]["url"] + "'";
             
             if(default_class != "")
@@ -197,17 +200,14 @@
             break;
 
           case "video/mp4":
+          case "video/avi":
             assetStr = 
               "<video controls='controls' width='490' height='245'>" +
               "  <source src='" + json["file"]["url"] + "'>" +
-              "  Your browser does not support HTML5 video."
+              " video"
               "</video>";
             break;
 
-          case "application/pdf":
-            assetStr = "<object data='" + json["file"]["url"] + "' " +
-                       "width='490' height='245' />"
-            break;
           default:
             assetStr = "<a href='" + json["file"]["url"] + "' >" +
                        json["file"]["title"] + "</a>"
