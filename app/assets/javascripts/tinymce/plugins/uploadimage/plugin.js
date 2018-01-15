@@ -11,14 +11,14 @@
 
       function showDialog() {
         win = editor.windowManager.open({
-          title: ed.translate('Insert a file from your computer'),
+          title: ed.translate('Insert an image from your computer'),
           width:  520 + parseInt(editor.getLang('uploadimage.delta_width', 0), 10),
           height: 180 + parseInt(editor.getLang('uploadimage.delta_height', 0), 10),
           body: [
             {type: 'iframe',  url: 'javascript:void(0)'},
-            {type: 'textbox', name: 'file', label: ed.translate('Choose a file'), subtype: 'file'},
-            {type: 'textbox', name: 'title',  label: ed.translate('File title')},
-            {type: 'textbox', name: 'alt',  label: ed.translate('File description')},
+            {type: 'textbox', name: 'file', label: ed.translate('Choose an image'), subtype: 'file'},
+            {type: 'textbox', name: 'title',  label: ed.translate('Image title')},
+            {type: 'textbox', name: 'alt',  label: ed.translate('Image description')},
             {type: 'container', classes: 'error', html: "<p style='color: #b94a48;'>&nbsp;</p>"},
 
             // Trick TinyMCE to add a empty div that "preloads" the throbber image
@@ -97,7 +97,7 @@
 
       function insertImage() {
         if(getInputValue("file") == "") {
-          return handleError('You must choose a file');
+          return handleError('You must choose an image/video');
         }
 
         throbber = new top.tinymce.ui.Throbber(win.getEl());
@@ -204,7 +204,8 @@
             assetStr = 
               "<video controls='controls' width='490' height='245'>" +
               "  <source src='" + json["file"]["url"] + "'>" +
-              " video"
+              "<a href='" + json["file"]["url"] + "' >" +
+                " Video's link </a>" +
               "</video>";
             break;
 
